@@ -1,0 +1,88 @@
+一 apache安装
+	下载所依赖的软件:
+1.wget http://archive.apache.org/dist/apr/apr-1.4.5.tar.gz  
+2.wget http://archive.apache.org/dist/apr/apr-util-1.3.12.tar.gz  
+3.wget http://jaist.dl.sourceforge.net/project/pcre/pcre/8.10/pcre-8.10.zip
+
+a:解决apr not found问题>>>>>>
+1.[root@xt test]# tar -zxf apr-1.4.5.tar.gz  
+2.[root@xt test]# cd  apr-1.4.5  
+3.[root@xt apr-1.4.5]# ./configure --prefix=/usr/local/apr  
+4.[root@xt apr-1.4.5]# make && make install 
+
+b:解决APR-util not found问题>>>>>>
+1.[root@xt test]# tar -zxf apr-util-1.3.12.tar.gz  
+2.[root@xt test]# cd apr-util-1.3.12  
+3.[root@xt apr-util-1.3.12]# ./configure --prefix=/usr/local/apr-util -with- apr=/usr/local/apr/bin/apr-1-config  
+4.[root@xt apr-util-1.3.12]# make && make install
+
+c:解决pcre问题>>>>>>>>>
+1.[root@xt test]#unzip -o pcre-8.10.zip  
+2.[root@xt test]#cd pcre-8.10  
+3.[root@xt pcre-8.10]#./configure --prefix=/usr/local/pcre  
+4.[root@xt pcre-8.10]#make && make install
+
+二 配置文件
+编辑 /usr/local/apache2/conf/httpd.conf 文件     
+     找到：
+    AddType  application/x-compress .Z
+    AddType application/x-gzip .gz .tgz
+    在后面添加：
+    AddType application/x-httpd-php .php（使Apcche支持PHP）
+    AddType application/x-httpd-php-source .php5   
+    找到：
+    <IfModule dir_module>
+    DirectoryIndex index.html
+    </IfModule>
+    添加：
+    <IfModule dir_module>
+    DirectoryIndex index.html index.php
+    </IfModule>    
+    找到：
+    ＃ServerName www.example.com:80
+    修改为：
+    ServerName 127.0.0.1:80或者ServerName localhost:80
+    记得要去掉前面的“＃”
+
+三 安装PHP
+1、 下载
+    http://www.php.net/downloads.php
+2、解压
+    tar -zxvf php-5.3.16.tar.gz
+3、建立目标文件夹
+    mkdir /usr/local/php5
+    也就是说等下安装的php要安装到这个文件夹里面
+4、配置
+    回到原来解压后的文件夹
+    ./configure --prefix=/usr/local/php5  --with-apxs2=/usr/local/Apache2/bin/apxs
+    注意这里有一个-with-apxs2=/usr/local/Apache2/bin/apxs选项，其中apxs是在安装Apache时产生的，apxs是一个为Apache HTTP服务器编译和安装扩展模块的工具，使之可以用由mod_so提供的LoadModule指令在运行时加载到Apache服务器中。我的理解是通过这个工具把PHP模块动态加载到Apache中
+出现错误:configure: error: xml2-config not found. Please check your libxml2 installation.
+运行yum install libxml2（可以先执行，就不会报错了），然后再运行yum install libxml2-devel安装完毕后，重新运行上面的./configure命令。
+5、编译安装
+make && make install
+6、配置文件
+cp /usr/local/src/php-5.3.16/php.ini-development  /usr/local/php/lib/php.ini
+把原来位于源代码里面的php.ini-development拷贝到/usr/local/php/lib/php.ini下，并且重命名为php.ini
+7、重启apache
+8、测试
+在apache的htdocs下建立一个php文件test.php，里面的内容如下：
+<?php
+phpinfo();
+?>
+
+四 php添加openssl模块
+
+1.安装openssl
+ yum install openssl-devel
+2.在跟php解压后的源码包中，/usr/local/installPack/php-5.6.31/ext/openssl/目录下
+使用phpize命令编译：/usr/local/php5.6/bin/phpize
+cp config0.m4 config.m4
+./configure --with-openssl --with-php-config=/usr/local/php5.6/bin/php-config
+make 
+make install
+#完成安装后，会返回一个.so文件的目录。在此目录下把openssl.so文件拷贝到你在php.ini中指定的extension_dir下
+#编辑php.ini文件，
+extension_dir=/usr/local/php5.6/lib/ext
+#在文件最后添加
+extension=openssl.so
+#重启Apache即可
