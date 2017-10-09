@@ -1,0 +1,16 @@
+1.安装jdk
+把jdk.tar.gz解压在/usr/local目录下
+编辑/ect/profile
+JAVA_HOME=/usr/local/jdk1.8
+CLASSPATH=.:$JAVA_HOME/lib/dt.jar:$JAVA_HOME/lib/tool.jar
+PATH=$PATH:JAVA_HOME/bin
+2.安装scala
+把jdk安装在/opt/下
+编辑/etc/profile
+SCALA_HOME=/opt/scala-2.12.3
+3.安装spark
+把spark安装在/opt/下
+编辑/etc/profile
+SPARK_HOME=/opt/spark-2.1.1-bin-hadoop2.7
+PATH=$PATH:$SPARK_HOME/bin
+export PATH

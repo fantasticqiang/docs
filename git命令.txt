@@ -8,6 +8,8 @@ git remote add origin git@github.com:fantasticqiang/docs.git
 #从现在起，只要本地作了提交，就可以通过命令：
 git push origin master
 #把本地master分支的最新修改推送至GitHub，现在，你就拥有了真正的分布式版本库！
+#用命令git clone克隆一个本地库
+ git clone git@github.com:michaelliao/gitskills.git
 二、创建合并分支
 #创建分支dev,然后切换到dev分支
 git branch dev
@@ -25,5 +27,28 @@ git checkout master
 git merge dev
 #合并完成后，就可以放心地删除dev分支了：
 git branch -d dev
+#Git友情提醒，feature-vulcan分支还没有被合并，如果删除，
+#将丢失掉修改，如果要强行删除，需要使用命令
+git branch -D feature-vulcan
 三、解决冲突
+#修改后保存，再提交
+git add readme.txt
+git commit -m "conflict fixed"
+#使用带有参数的git log查看分支的合并情况
+git log -graph --pretty=oneline --abbrev-commit
+
+#git合并分支时，会使用fast forward模式，删除分支后，会丢掉分支信息
+#以下命令合并dev分支，表示禁用fast forward
+git merge --no-ff -m "merge with mo-ff" dev
+#git log 查看分支信息
+git log --graph
+
+#Git还提供了一个stash功能，可以把当前工作现场“储藏”起来，等以后恢复现场后继续工作：
+git stash
+#git stash apply恢复，但是恢复后，stash内容并不删除，你需要用git stash drop来删除；
+#一种方式是用git stash pop，恢复的同时把stash内容也删了：
+
+# git fetch：相当于是从远程获取最新版本到本地，不会自动merge
+git fentch origin master
+
 
