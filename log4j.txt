@@ -1,0 +1,61 @@
+###log4j###
+
+一、配置说明
+
+=====1.1 配置根Logger=====
+
+	logger定义了log4j支持的日志界别及输出目的地
+	log4j.rootLogger = [level],appenderName,appenderName,...
+	level是日志记录的优先级，OFF,FATAL,ERROR,WARN,INFO,DEBUG,ALL
+	
+=====1.2 配置输出目的地Appender=====
+  
+  log4j.appender.appenderName = xxx
+  log4j.appender.appenderName.option1 = value1
+  	...
+  log4j.appender.appenderName.optionN = valueN
+  
+  lo4j 提供appender 有以下几种：
+  	org.apache.log4j.ConsoleAppender(控制台),
+  	org.apache.log4j.FileAppender(文件),
+  	org.apache.log4j.DailyRollingFileAppender,(每天产生一个日志文件)
+  	org.apache.log4j.RollingFileAppender,(文件达到大小产生一个新的)
+  	org.apache.log4j.WriterAppender,(把日志以流的格式发送到任意的地方)
+  	
+=====1.3 log4j输出多个自定义日志文件=====
+
+		如果想对不同的类输出不同的文件(以cn.com.Test为例)，先要在Test.java中定义:
+	private static Log logger = LogFactory.getLog(Test.class);
+	　　然后在log4j.properties中加入:
+	log4j.logger.cn.com.Test= DEBUG, test
+	log4j.appender.test=org.apache.log4j.FileAppender
+	log4j.appender.test.File=${myweb.root}/WEB-INF/log/test.log
+	log4j.appender.test.layout=org.apache.log4j.PatternLayout
+	log4j.appender.test.layout.ConversionPattern=%d %p [%c] - %m%n
+		
+		但是，如果在同一类中需要输出多个日志文件呢？其实道理是一样的，先在Test.java中定义:
+	private static Log logger1 = LogFactory.getLog("myTest1");
+	private static Log logger2 = LogFactory.getLog("myTest2");
+	　　然后在log4j.properties中加入:
+	log4j.logger.myTest1= DEBUG, test1
+	log4j.appender.test1=org.apache.log4j.FileAppender
+	log4j.appender.test1.File=${myweb.root}/WEB-INF/log/test1.log
+	log4j.appender.test1.layout=org.apache.log4j.PatternLayout
+	log4j.appender.test1.layout.ConversionPattern=%d %p [%c] - %m%n
+	　　
+	log4j.logger.myTest2= DEBUG, test2
+	log4j.appender.test2=org.apache.log4j.FileAppender
+	log4j.appender.test2.File=${myweb.root}/WEB-INF/log/test2.log
+	log4j.appender.test2.layout=org.apache.log4j.PatternLayout
+	log4j.appender.test2.layout.ConversionPattern=%d %p [%c] - %m%n
+	
+=====1.4输出格式=====
+	
+	根日志记录器 rootLogger
+	附加器 appender
+	%p 输出日志级别 %5p日志右对齐，占5个字符
+	%d 输出日志时间，%d{yyyy-MM-dd HH:mm:ss,SSS}
+	%c 输出日志信息所属的类，类的全名
+	%L 输出代码中的行号
+	%m 输出代码中具体的日志信息
+	%n 输出回车换行符

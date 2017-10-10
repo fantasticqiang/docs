@@ -14,3 +14,20 @@ SCALA_HOME=/opt/scala-2.12.3
 SPARK_HOME=/opt/spark-2.1.1-bin-hadoop2.7
 PATH=$PATH:$SPARK_HOME/bin
 export PATH
+3.编辑conf下spark-env.sh
+cp spark-env.sh.template spark-env.sh
+#在里面加入配置
+export SCALA_HOME=/opt/scala-2.12.3
+export JAVA_HOME=/usr/local/jdk1.8.0_144
+export SPARK_HOME=/opt/spark-2.1.1-bin-hadoop2.7
+export SAPRK_EXECUTOR_MEMORY=1G
+#新建slaves文件
+cp slaves.template slaves
+4.设置主机名
+vi /etc/sysconfig/network
+HOSTNAME=lele
+
+vi /etc/hosts
+在 127.0.0.1后面加上lele
+5.单机测试spark
+./bin/run-example SparkPi 10
