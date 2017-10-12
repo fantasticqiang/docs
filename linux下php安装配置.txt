@@ -70,11 +70,11 @@ cp /usr/local/src/php-5.3.16/php.ini-development  /usr/local/php/lib/php.ini
 phpinfo();
 ?>
 
-四 php添加openssl模块
+四 php添加模块
 
 1.安装openssl
  yum install openssl-devel
-2.在跟php解压后的源码包中，/usr/local/installPack/php-5.6.31/ext/openssl/目录下
+在跟php解压后的源码包中，/usr/local/installPack/php-5.6.31/ext/openssl/目录下
 使用phpize命令编译：/usr/local/php5.6/bin/phpize
 cp config0.m4 config.m4
 ./configure --with-openssl --with-php-config=/usr/local/php5.6/bin/php-config
@@ -86,3 +86,17 @@ extension_dir=/usr/local/php5.6/lib/ext
 #在文件最后添加
 extension=openssl.so
 #重启Apache即可
+
+2.安装curl
+	进入PHP源码包目录，/usr/local/installPack/php-5.6.31/ext/curl
+	执行编译，/usr/local/php5.6/phpize
+	执行，./configure --with-curl --with-php-config=/usr/local/php5.6/bin/php-config
+	make
+	make install
+	#完成安装后，会返回一个.so文件的目录。在此目录下把curl.so文件拷贝到你在php.ini中指定的extension_dir下
+	#编辑php.ini文件，
+	extension_dir=/usr/local/php5.6/lib/ext
+	#在文件最后添加
+	extension=openssl.so
+	#重启Apache即可
+	

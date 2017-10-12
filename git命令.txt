@@ -1,4 +1,4 @@
-一、添加远程库
+﻿一、添加远程库
   现在的情景是，你已经在本地创建了一个Git仓库后，又想在GitHub创建一个Git仓库，并且让这两个仓库进行远程同步。
   gitbub上Create a new repo
 #在本地的learngit仓库下运行命令
@@ -30,7 +30,9 @@ git branch -d dev
 #Git友情提醒，feature-vulcan分支还没有被合并，如果删除，
 #将丢失掉修改，如果要强行删除，需要使用命令
 git branch -D feature-vulcan
+
 三、解决冲突
+
 #修改后保存，再提交
 git add readme.txt
 git commit -m "conflict fixed"
