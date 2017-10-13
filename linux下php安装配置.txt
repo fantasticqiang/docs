@@ -23,6 +23,7 @@ c:解决pcre问题>>>>>>>>>
 4.[root@xt pcre-8.10]#make && make install
 
 二 配置文件
+
 编辑 /usr/local/apache2/conf/httpd.conf 文件     
      找到：
     AddType  application/x-compress .Z
@@ -99,4 +100,9 @@ extension=openssl.so
 	#在文件最后添加
 	extension=openssl.so
 	#重启Apache即可
+	
+	五 php维护
+	
+1.php设置时区
+	php.ini里找到date.timezone = PRC
 	
