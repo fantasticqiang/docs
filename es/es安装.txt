@@ -1,0 +1,49 @@
+一、es安装
+
+1. 单节点配置
+
+使用root用户，添加用户：
+groupadd hadoop
+useradd hadoop -g hadoop
+passwd hadoop
+输入两次密码
+
+
+下载:
+wget https://www.elastic.co/downloads/past-releases/elasticsearch-5-2-2
+
+解压：
+tar xf elasticsearch-5.2.2.tar.gz
+
+修改elasticsearch.yml:
+
+#设置集群名称
+cluster.name: test
+#设置节点名称
+node.name: node-1
+#锁定内存false
+bootstrap.memory_lock: false
+bootstrap.system_call_filter: false
+
+修改jvm.options
+#设置内存大小
+-Xms512m
+-Xmx512m
+
+#修改limits.conf,最大文件打开数，进程数量
+* soft nofile 65536
+
+* hard nofile 131072
+
+* soft nproc 2048
+
+* hard nproc 4096
+
+#修改/etc/sysctl.conf,最下面添加最大虚拟内存
+vm.max_map_count=655360
+
+#修改用户可创建线程数
+vi /etc/security/limits.d/90-nproc.conf
+* soft nproc 1024
+修改为
+* soft nproc 2048
