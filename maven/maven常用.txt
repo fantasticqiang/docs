@@ -1,0 +1,11 @@
+******1《maven常用》
+
+***1.1 maven设置阿里镜像
+
+#创建maven项目时settings.xml默认是用/User/.m2/settings.xml,修改它
+   <mirror>
+    <id>alimaven</id>
+    <name>aliyun maven</name>
+    <url>http://maven.aliyun.com/nexus/content/groups/public/</url>
+    <mirrorOf>central</mirrorOf>        
+  </mirror>

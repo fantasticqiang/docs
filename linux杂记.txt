@@ -12,3 +12,24 @@ free -m
 #清理内存
 #echo 1 清空页缓存，echo 2 目录项 inode table(读档案的时候，就会先去读 inode table)，echo 3 包括前两项
 echo 3 > /proc/sys/vm/drop_caches
+
+***1.3解压缩
+
+#gzip压缩,把文件压缩成*.gz格式
+gzip a.txt
+
+#gzip解压 -d(decompress解压的意思)
+gzip -d *.gz
+
+
+#tar 打包
+tar -cvf 目标文件名 待压缩文件名
+tar -cvf a.txt.tar a.txt
+
+#tar 解包
+tar -xvf *.tar
+
+#一次性完成打包压缩，解包解压缩
+#-C 解压到某目录，目录地址
+tar -zcvf my.tar.gz /somefile
+tar -zxvf my.tar.gz -C /home
