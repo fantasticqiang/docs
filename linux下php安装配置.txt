@@ -56,7 +56,8 @@ c:解决pcre问题>>>>>>>>>
 4、配置
     回到原来解压后的文件夹
     ./configure --prefix=/usr/local/php5  --with-apxs2=/usr/local/Apache2/bin/apxs
-    注意这里有一个-with-apxs2=/usr/local/Apache2/bin/apxs选项，其中apxs是在安装Apache时产生的，apxs是一个为Apache HTTP服务器编译和安装扩展模块的工具，使之可以用由mod_so提供的LoadModule指令在运行时加载到Apache服务器中。我的理解是通过这个工具把PHP模块动态加载到Apache中
+    注意这里有一个-with-apxs2=/usr/local/Apache2/bin/apxs选项，其中apxs是在安装Apache时产生的，apxs是一个为Apache HTTP服务器编译和安装扩
+	展模块的工具，使之可以用由mod_so提供的LoadModule指令在运行时加载到Apache服务器中。我的理解是通过这个工具把PHP模块动态加载到Apache中
 出现错误:configure: error: xml2-config not found. Please check your libxml2 installation.
 运行yum install libxml2（可以先执行，就不会报错了），然后再运行yum install libxml2-devel安装完毕后，重新运行上面的./configure命令。
 5、编译安装
@@ -90,7 +91,7 @@ extension=openssl.so
 
 2.安装curl
 	进入PHP源码包目录，/usr/local/installPack/php-5.6.31/ext/curl
-	执行编译，/usr/local/php5.6/phpize
+	执行编译，/usr/local/php5.6/bin/phpize
 	执行，./configure --with-curl --with-php-config=/usr/local/php5.6/bin/php-config
 	make
 	make install
@@ -99,6 +100,17 @@ extension=openssl.so
 	extension_dir=/usr/local/php5.6/lib/ext
 	#在文件最后添加
 	extension=openssl.so
+	#重启Apache即可
+	
+3.安装mysqli
+	进入PHP源码包目录，/usr/local/installPack/php-5.6.31/ext/mysqli
+	执行编译，/usr/local/php5.6/phpize
+	执行, ./configure --with-php-config=/usr/local/php5.6/bin/php-config --with-mysqli=/usr/local/mysql/bin/mysql_config
+	make && make install
+	#编辑php.ini文件，
+	extension_dir=/usr/local/php5.6/lib/ext
+	#在文件最后添加
+	extension=mysqli.so
 	#重启Apache即可
 	
 	五 php维护

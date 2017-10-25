@@ -1,0 +1,56 @@
+*****mysql安装配置
+
+1.下载tar.gz
+/usr/local/mysql目录下
+wget https://dev.mysql.com/get/Downloads/MySQL-5.7/mysql-5.7.20-linux-glibc2.12-x86_64.tar.gz
+tar xf mysql-5.7.20-linux-glibc2.12-x86_64.tar.gz
+mv mysql-5.7.20-linux-glibc2.12-x86_64.tar.gz mv5.7
+
+#创建mysql用户和组
+groupadd mysql
+useradd mysql -g mysql
+
+#修改权限
+在/usr/local/mysql目录下
+chown -R mysql .
+chgrp -R mysql .
+
+#安装依赖
+yum install libaio
+yum install fastestmirror refresh-packagekit security
+
+#初始化mysql并启动mysql
+cd /usr/local/mysql/bin
+./mysqld --initialize --user=mysql --basedir=/usr/local/mysql/--datadir=/usr/local/mysql/data/
+#在这里最后一行会生成密码，记录下来，如：,DnqtaTsk2ie
+
+#创建my.cnf
+vi /etc/my.cnf
+加入：
+#[mysql]  
+#basedir=/usr/local/mysql/  
+#datadir=/usr/local/mysql/data/
+
+#mysqld服务加入开机启动
+cd /usr/local/mysql/support-files
+#复制文件
+cp mysql.server /etc/init.d/mysql
+#添加执行权限
+chmod +x /etc/init.d/mysql
+#添加开机启动
+chkconfig --add mysql
+#查看添加是否成功
+chkconfig --list mysql   显示如下：
+mysql           0:off   1:off   2:on    3:on    4:on    5:on    6:off
+
+#启动服务
+service mysql start
+
+#进入之后重设密码
+set password=password("lqq");
+
+#设置远程登录权限，让其他ip也能连接数据库
+grant all privileges on *.* to'root' @'%' identified by 'root';
+
+
+

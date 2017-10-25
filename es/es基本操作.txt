@@ -1,0 +1,113 @@
+一、基本操作
+
+#删除一个索引：
+curl -XDELETE 'http://localhost:9200/bank'
+
+#创建索引(一个分片，0个副本)：
+curl -XPUT 'http://localhost:9200/bank?pretty' -d '{"settings":{"number_of_shards":1,"number_of_replicas":0}}'
+
+#查看所有的索引：
+curl -XGET 'http://localhost:9200/_cat/indices?pretty'
+
+#插入一条数据：
+curl -XPUT 'localhost:9200/bank/customer/1?pretty'
+
+#修改数据
+curl -XPUT 某一个文档
+
+#更新数据
+curl -XPOST 'localhost:9200/bank/customer/1/_update?pretty' -d '{"name":"qiang"}'
+
+#通过script来更新
+curl -XPOST 'localhost:9200/bank/customer/1/_update?pretty' -d '{"script":"ctx._source.age += 5"}'
+
+#批量处理
+curl -XPOST 'localhost:9200/bank/customer/_bulk?pretty' -d '
+{"update":{"_id":"1"}}
+{"doc":{"age":27}}
+{"delete":"_id":"2"}'
+
+#从文件批量导入数据
+curl -XPOST 'localhost:9200/bank/account/_bulk?pretty' --data-binary "@accounts.json"
+
+#查询bank索引
+curl -XPOST 'localhost:9200/bank/account/_search?q=*&pretty'
+等价于：
+curl -XPOST 'localhost:9200/bank/account/_search?pretty' -d '
+{
+	"query":{"match_all":{}}
+}'
+默认会返回前10条数据，加上 "size":1 就返回一条
+
+#只查询其中部分字段
+curl -XPOST 'localhost:9200/bank/_search?pretty' -d '
+{
+	"query":{"match_all":{}},
+	"_source":["firstname","age"]
+}
+
+#按照字段降序
+curl -XPOST 'localhost:9200/bank/_search?pretty' -d '
+{
+	"query":{"match_all":{}},
+	"_source":["firstname","age"],
+	"sort":{"age":{"order":"desc"}},
+	"size":3
+}
+
+#根据某一个字段的值查询
+curl -XPOST 'localhost:9200/bank/_search?pretty' -d '
+{
+	"query":{"match":{"account_number":20}}
+}'
+
+#返回地址中包含mill或者lane的所有数据
+curl -XPOST 'localhost:9200/bank/_search?pretty' -d '
+{"query":{"match":{"address":"mail lane"}}}'
+
+#匹配短语
+curl -XPOST 'localhost:9200/bank/_search?pretty' -d '
+{"query":{"match_phrase":{"address":"mail lane"}}}'
+
+#boolean查询，多个简单查询组合
+curl -XPOST 'localhost:9200/bank/_search?pretty' -d '
+{
+	"query":{
+		"bool":{
+			"must":[{"match":{"address":"hebei"}},{"match":{"address":"baoding"}}]
+		}
+	}
+}'
+must 修改为 should 表示或者关系
+
+#boolean查询返回余额在20000到30000之间的所有数据
+curl -XPOST 'localhost:9200/bank/_search?pretty' -d '
+{
+	"query":{
+		"bool":{
+			"must":{"match_all":{}},
+			"filter":{
+				"range":{
+					"balance":{
+						"gte":20000,
+						"lte":30000
+					}
+				}
+			}
+		}
+	},
+	"size":3,
+	"sort":{"balance":{"order":"desc"}}
+}'
+
+#聚合
+curl -XGET 'localhost:9200/bank/_search?pretty' -H 'Content-Type: application/json' -d'{
+   "size": 0,
+   "aggs": {
+     "group_by_state": {
+       "terms": {
+         "field": "state.keyword"
+       }
+     }
+   }
+ }'

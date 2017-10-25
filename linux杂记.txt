@@ -1,0 +1,14 @@
+*****linux杂记
+
+***1.1批量删除rpm包
+rpm -qa|grep python|xargs rpm -e --allmatches --nodeps
+rpm -qa|grep python|while read c;do rpm -e $c --nodeps;done
+# --nodeps <包的名字> 不检查依赖，直接删除rpm包
+# --allmatches 删除所有相同名字的包
+
+***1.2内存清理
+#查看内存
+free -m
+#清理内存
+#echo 1 清空页缓存，echo 2 目录项 inode table(读档案的时候，就会先去读 inode table)，echo 3 包括前两项
+echo 3 > /proc/sys/vm/drop_caches
