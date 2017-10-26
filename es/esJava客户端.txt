@@ -1,0 +1,105 @@
+*****《esJava客户端》
+
+***1.1准备工作
+#添加maven依赖
+<dependency>
+    <groupId>org.elasticsearch.client</groupId>
+    <artifactId>transport</artifactId>
+    <version>5.2.2</version>
+</dependency>
+
+#log4j2依赖
+<dependency>
+	<groupId>org.apache.logging.log4j</groupId>
+	<artifactId>log4j-api</artifactId>
+	<version>2.7</version>
+</dependency>
+<dependency>
+	<groupId>org.apache.logging.log4j</groupId>
+	<artifactId>log4j-core</artifactId>
+	<version>2.7</version>
+</dependency>
+
+#transportClient创建
+Settings settings = Settings.builder().put("cluster.name","test").build();
+TransportClient client = new PreBuiltTransportClient(settings)
+	.addTransportAddress(new InetSocketTransportAddress(InetAddress.getByName("47.94.193.202"), 9300));
+
+#创建索引
+	/**
+	 * 创建索引
+	 */
+	public static void createIndex(TransportClient client){
+		CreateIndexResponse createIndexResponse = client.admin().indices()
+			.prepareCreate(ES_INDEX)
+			.setSettings(Settings.builder()
+					.put("index.number_of_shards", 1)
+					.put("index.number_of_replicas", 0))
+			.get();
+		System.out.println("创建索引"+createIndexResponse.toString());
+	}
+
+#修改索引副本
+client.admin().indices().prepareUpdateSettings(ES_INDEX)
+	.setSettings(Settings.builder().put("index.number_of_replicas", 0)).get();
+	
+#删除索引
+DeleteIndexResponse dResponse = client.admin().indices().prepareDelete(ES_INDEX)
+	.execute().actionGet();
+	
+#查询document by id,设置operation threading false,在相同服务器上的分片上查询
+GetResponse response = client.prepareGet("twitter", "tweet", "1")
+	.setOperationThreaded(false)
+	.get();
+
+#通过id删除文档
+DeleteResponse response = client.prepareDelete("bank","customer","1").get;
+
+#通过查询api删除
+BulkIndexByScrollResponse response = DeleteByQueryActiion.INSTANCE.newRequestBuilder(client)
+	.filter(QueryBuilders.matchQuery("字段","值"))
+	.source("索引")
+	.get();
+long deleted = response.getDeleted();
+
+#更新文档
+#UpdateRequest
+UpdateRequest updateRequest = new UpdateRequest();
+updateRequest.index("index");
+updateRequest.type("type");
+updateRequest.id("1");
+updateRequest.doc(jsonBuilder()
+	.startObject()
+		.field("gender","male")
+	.endObject());
+client.update(updateRequest).get();
+
+#prepareUpdate() method
+client.prepareUpdate("ttl","doc","1")
+	.setScript(new Script("ctx._source.gender = \"male\"" , ScriptService.ScriptType.INLINE, null, null))
+	.get();
+	
+client.prepareUpdate("ttl", "doc", "1")
+	.setDoc(jsonBuilder()               
+		.startObject()
+			.field("gender", "male")
+		.endObject())
+	.get();
+
+#bulk api(批量)
+BulkRequestBuilder bulkRequest = client.prepareBulk();
+bulkRequest.add(client.prepareIndex("twitter", "tweet", "1")
+	.setSource(jsonBuilder()
+				.startObject()
+					.field("user", "kimchy")
+					.field("postDate", new Date())
+					.field("message", "trying out Elasticsearch")
+				.endObject()
+			  )
+	);  
+	.
+	.
+	.
+BulkResponse bulkResponse = bulkRequest.get();
+
+#
