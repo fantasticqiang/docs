@@ -1,5 +1,11 @@
 一、基本操作
 
+目录
+	1.1 基本操作
+	1.2 mapping的写入
+
+1.1基本操作
+
 #删除一个索引：
 curl -XDELETE 'http://localhost:9200/bank'
 
@@ -111,3 +117,21 @@ curl -XGET 'localhost:9200/bank/_search?pretty' -H 'Content-Type: application/js
      }
    }
  }'
+ 
+1.2 mapping的写入
+
+#查看mapping
+curl -XGET 'localhost:9200/bank/_mapping?pretty'
+
+#索引添加类型，并设置mapping
+curl -XPOST 'localhost:9200/bank/customer/_mapping?pretty' -d '
+	{
+		"custumer":{
+			"properties":{...}
+		}
+	}'
+
+#修改mapping，给type增加一个字段
+跟设置mapping一样
+
+#修改字段的类型，就会返回错误。
