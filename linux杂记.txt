@@ -44,4 +44,14 @@ ssh-keygen -t rsa 然后一路回车
 #scp命令
 scp localfile username@主机名:remotefile
 
+***1.5 iptables
+
+#临时关闭iptables
+sudo service iptables stop
+
+#查看iptables状态
+sudo service iptables status
+
+#永久关闭防火墙，设置自启动为关闭
+chkconfig iptables off
 
