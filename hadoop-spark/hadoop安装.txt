@@ -1,0 +1,63 @@
+*****hadoop安装
+
+1.1 ssh免密登录
+
+ssh-keygen -t rsa 几个回车，.ssh/ 目录下会生成公私钥对
+生成authorized_keys把几个机器上的id_rsa.pub里的内容都拷贝到其中，并设置文件的权限是600
+
+#创建几个文件夹
+mkdir  /root/hadoop  
+mkdir  /root/hadoop/tmp  
+mkdir  /root/hadoop/var  
+mkdir  /root/hadoop/dfs  
+mkdir  /root/hadoop/dfs/name  
+mkdir  /root/hadoop/dfs/data  
+
+#修改/etc/hadoop下的配置文件
+#core-site.xml
+<property>
+	<name>hadoop.tmp.dir</name>
+	<value>/root/hadoop/tmp</value>
+	<description>Abase for other temporary directories.</description>
+</property>
+<property>
+<name>fs.default.name</name>
+<value>hdfs://hserver1:9000</value>
+</property>
+
+#修改hadoop-env.sh
+
+修改/opt/hadoop/hadoop-2.8.0/etc/hadoop/hadoop-env.sh文件
+将export   JAVA_HOME=${JAVA_HOME}
+修改为：
+export   JAVA_HOME=/usr/local/java8
+ 
+#修改hdfs-site.xml
+<property>
+<name>dfs.name.dir</name>
+<value>/root/hadoop/dfs/name</value>
+<description>Path on the local filesystem where theNameNode stores the namespace and transactions logs persistently.</description>
+</property>
+<property>
+<name>dfs.data.dir</name>
+<value>/root/hadoop/dfs/data</value>
+<description>Comma separated list of paths on the localfilesystem of a DataNode where it should store its blocks.</description>
+</property>
+<property>
+<name>dfs.replication</name>
+<value>2</value>
+</property>
+
+#mapred-site.xml
+<property>
+<name>mapred.job.tracker</name>
+<value>hserver1:49001</value>
+</property>
+<property>
+<name>mapred.local.dir</name>
+<value>/root/hadoop/var</value>
+</property>
+<property>
+<name>mapreduce.framework.name</name>
+<value>yarn</value>
+</property>

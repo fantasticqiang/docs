@@ -33,3 +33,25 @@ tar -xvf *.tar
 #-C 解压到某目录，目录地址
 tar -zcvf my.tar.gz /somefile
 tar -zxvf my.tar.gz -C /home
+
+***1.4 ssh
+
+#免密登录
+ssh-keygen -t rsa 然后一路回车
+把公钥文件中的内容添加到authorized_keys中
+并设置authorized_keys的权限是600
+
+#scp命令
+scp localfile username@主机名:remotefile
+
+***1.5 iptables
+
+#临时关闭iptables
+sudo service iptables stop
+
+#查看iptables状态
+sudo service iptables status
+
+#永久关闭防火墙，设置自启动为关闭
+chkconfig iptables off
+
