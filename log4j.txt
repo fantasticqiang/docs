@@ -6,7 +6,7 @@
 
 	logger定义了log4j支持的日志界别及输出目的地
 	log4j.rootLogger = [level],appenderName,appenderName,...
-	level是日志记录的优先级，OFF,FATAL,ERROR,WARN,INFO,DEBUG,ALL
+	level是日志记录的优先级，OFF,FATAL, （ERROR,WARN,INFO,DEBUG,） ALL
 	
 =====1.2 配置输出目的地Appender=====
   
@@ -15,12 +15,24 @@
   	...
   log4j.appender.appenderName.optionN = valueN
   
-  lo4j 提供appender 有以下几种：
+  lo4j 提供appender 有以下几种(xxx处填写)：
   	org.apache.log4j.ConsoleAppender(控制台),
   	org.apache.log4j.FileAppender(文件),
   	org.apache.log4j.DailyRollingFileAppender,(每天产生一个日志文件)
   	org.apache.log4j.RollingFileAppender,(文件达到大小产生一个新的)
   	org.apache.log4j.WriterAppender,(把日志以流的格式发送到任意的地方)
+	
+	#配置日志信息格式（布局）：
+	log4j.appender.appenderName.layout = fully.qualified.name.of.layout.class （①）
+	log4j.appender.appenderName.layout.option1  =  value1 
+	...
+	
+	#① 处有几种选择：
+	org.apache.log4j.HTMLLayout（以HTML表格形式布局），
+    org.apache.log4j.PatternLayout（可以灵活地指定布局模式），
+    org.apache.log4j.SimpleLayout（包含日志信息的级别和信息字符串），
+    org.apache.log4j.TTCCLayout（包含日志产生的时间、线程、类别等等信息）
+	
   	
 =====1.3 log4j输出多个自定义日志文件=====
 
@@ -59,3 +71,4 @@
 	%L 输出代码中的行号
 	%m 输出代码中具体的日志信息
 	%n 输出回车换行符
+	%t 输出该日志事件的线程名
