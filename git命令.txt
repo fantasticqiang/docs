@@ -53,4 +53,7 @@ git stash
 # git fetch：相当于是从远程获取最新版本到本地，不会自动merge
 git fentch origin master
 
+四、git常用
 
+  4.1 git给空文件夹添加隐藏文件
+find . \( -type d -empty \) -and \( -not -regex ./\.git.* \) -exec touch {}/.gitkeep \;
