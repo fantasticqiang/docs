@@ -1,0 +1,26 @@
+DBA登录：sqlplus / as sysdba
+创建用户
+	1、建立连接：CONNECT /AS SYSDBA
+	2、创建用户：create user test identified by password;
+	3、创建表空间：create tablespace test datafile 'D:\oracle\oradata\test.dbf' size 200m;
+	//4、将空间分配给用户：alert user test default tablespace test;
+	5、给用户授权：grant create session,create table,unlimited tablespace to test;
+	6、登陆 sid:orcl
+	7、批量修改两个表有对应关系的列值
+		 UPDATE ppp_mchnt_info ta SET(ta.mchnt_name2) = 
+  			(SELECT tb.CARD_ACCPTR_NM_LOC FROM mchnt tb where trim(ta.mchnt_cd) = tb.mchnt_cd)
+			WHERE trim(ta.mchnt_cd) IN (SELECT tb.mchnt_cd FROM mchnt tb);
+	8、导入数据库imp pay/Asdf1234@tds  file=d:/daochu.dmp 
+	9、修改排序内存：alter system set sort_area_size=2147483000 scope=spfile;
+	10、直接cmd下执行
+			数据库导出：
+			exp userid=pay_db/pay_db123 owner=pay_db file=pay_db_backup.tmp compress=n
+			exp userid=etm/etm_db owner=etm file=gouu_net_cn_backup.tmp compress=n
+			数据库导入：
+			imp userid=orcl/pay_db fromuser=pay_db touser=pay_db file=pay_db_backup.tmp
+	11、列加密过程
+		cmd -》 sqlplus / as sysdba
+		grant execute on dbms_crypto to pay_db;
+	12、创建数据库链接
+		create public  database link TO_DB_64 connect to pay_db identified by pay_db123 using '(DESCRIPTION =(ADDRESS_LIST =(ADDRESS =(PROTOCOL = TCP)(HOST = 192.168.1.68)(PORT = 1521)))(CONNECT_DATA =(SERVICE_NAME = orcl)))';
+		select * from pay_order@TO_DB_64 where payordno='puPpoPV2Q3rKTOG';
